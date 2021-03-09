@@ -1,0 +1,250 @@
+const express = require('express');
+const router = express.Router();
+const mongoose = require("mongoose");
+const employee = require('../models/employee');
+const Company = require('../models/company');
+const factor = require('../models/factor');
+/* GET home page. */
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Express' });
+// });
+
+
+router.get('/employeePages', function (req, res) {
+    employee.find({}, (err, companies) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        // res.json(companies);
+        res.render('employee', {
+            companies
+        });
+    });
+})
+
+
+
+// ? -------------------------------------- < ready company > ---------------------
+
+router.get('/all', (req, res) => {
+    employee.find({}, (err, employies) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(employies);
+    });
+});
+router.get('/manager', (req, res) => {
+
+    employee.find({
+        "manager": true
+    }, (err, employee) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(employee);
+    })
+
+});
+
+
+router.get('/:id', (req, res) => {
+    let arr = req.params.id.split('-');
+
+    let recentlyYear = new Date().getFullYear() - arr[0];
+    let oldYear = new Date().getFullYear() - arr[1];
+
+
+    employee.find({
+        $and: [{
+            "birthday": {
+                $lt: `${recentlyYear}`
+            }
+        }, {
+            "birthday": {
+                $gt: `${oldYear}`
+            }
+        }]
+    }, {
+        "_id": 0
+    }, (err, employee) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(employee);
+    })
+
+});
+
+// ? -------------------------------------- < create company > ---------------------
+router.put('/', (req, res) => {
+
+    if (!req.body.company || !req.body.first_name) {
+        return res.status(400).json({
+            msg: "Bad Request :=)"
+        })
+    }
+
+    // ! company validation
+
+    Company.findById(req.body.company, (err, company) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.message
+        });
+        if (!company) return res.status(404).json({
+            msg: "Not Found :)"
+        })
+
+        // ! manager validation
+        if (req.body.manager === true) {
+            employee.find({
+                "company": req.body.company,
+                "manager": true
+            }, (err, employee_id) => {
+                if (err) return res.status(500).json({
+                    msg: "Server Error :-)",
+                    err: err.message
+                });
+                console.log("=====> ",employee_id);
+                if (employee_id.length > 0 ) {
+                    return res.status(400).json({
+                        msg: "Bad Request :====)"
+                    })
+                } else {
+                    const newEmployee = new employee({
+                        _id: new mongoose.Types.ObjectId,
+                        first_name: req.body.first_name,
+                        last_name: req.body.last_name,
+                        national_number: req.body.national_number,
+                        gender: req.body.gender,
+                        manager: req.body.manager,
+                        birthday: req.body.birthday,
+                        company: req.body.company
+                    });
+
+                    const newFactory = new factor({
+                        employee: newEmployee._id,
+                        company: req.body.company
+                    });
+
+                    Company.findOneAndUpdate({
+                        _id: req.body.company
+                    }, req.body, {
+                        manager: newEmployee._id
+                    }, (err, company) => {
+                        if (err) return res.status(500).json({
+                            msg: "Server Error :)",
+                            err: err.msg
+                        });
+                        // res.json(company);
+                    })
+
+                    newFactory.save((err, factor) => {
+                        if (err) return res.status(500).json({
+                            msg: "Server Error :)",
+                            err: err.message
+                        });
+                        // res.json(product)
+                    })
+
+                    newEmployee.save((err, employee) => {
+                        if (err) return res.status(500).json({
+                            msg: "Server Error :)",
+                            err: err.message
+                        });
+                        res.json(employee)
+                    })
+                }
+            })
+        } else {
+            const newEmployee = new employee({
+                _id: new mongoose.Types.ObjectId,
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                national_number: req.body.national_number,
+                gender: req.body.gender,
+                manager: req.body.manager,
+                birthday: req.body.birthday,
+                company: req.body.company
+            });
+
+            const newFactory = new factor({
+                employee: newEmployee._id,
+                company: req.body.company
+            });
+
+
+            newFactory.save((err, factor) => {
+                if (err) return res.status(500).json({
+                    msg: "Server Error :)",
+                    err: err.message
+                });
+                // res.json(product)
+            })
+
+            newEmployee.save((err, employee) => {
+                if (err) return res.status(500).json({
+                    msg: "Server Error :)",
+                    err: err.message
+                });
+                res.json(employee)
+            })
+        }
+
+
+
+    });
+
+
+});
+// ? -------------------------------------- < update company > ---------------------
+
+router.post('/:id', (req, res) => {
+    employee.findOneAndUpdate({
+        _id: req.params.id
+    }, req.body, {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        national_number: req.body.national_number,
+        gender: req.body.gender,
+        manager: req.body.manager,
+        birthday: req.body.birthday
+    }, (err, employee) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(employee);
+    })
+});
+// ? -------------------------------------- < delete company > ---------------------
+router.delete('/:id', (req, res) => {
+    factor.deleteMany({
+        employee: req.params.id
+    }, (err, employee) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(employee);
+    })
+
+    employee.findOneAndDelete({
+        _id: req.params.id
+    }, (err, employee) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(employee);
+    })
+});
+
+
+
+module.exports = router;
