@@ -4,10 +4,7 @@ const mongoose = require("mongoose");
 const employee = require('../models/employee');
 const Company = require('../models/company');
 const factor = require('../models/factor');
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
+
 
 
 router.get('/employeePages', function (req, res) {
@@ -37,16 +34,19 @@ router.get('/all', (req, res) => {
     });
 });
 router.get('/manager', (req, res) => {
-
-    employee.find({
-        "manager": true
-    }, (err, employee) => {
+Company.find({}, (err, company) => {
+    if (err) return res.status(500).json({
+        msg: "Server Error :)",
+        err: err.msg
+    });
+    employee.find({manager: true}).populate("company", { name: 1}).exec( (err, employee) => {
         if (err) return res.status(500).json({
             msg: "Server Error :)",
             err: err.msg
         });
         res.json(employee);
     })
+})
 
 });
 
@@ -110,8 +110,8 @@ router.put('/', (req, res) => {
                     msg: "Server Error :-)",
                     err: err.message
                 });
-                console.log("=====> ",employee_id);
-                if (employee_id.length > 0 ) {
+                console.log("=====> ", employee_id);
+                if (employee_id.length > 0) {
                     return res.status(400).json({
                         msg: "Bad Request :====)"
                     })
@@ -134,11 +134,14 @@ router.put('/', (req, res) => {
 
                     Company.findOneAndUpdate({
                         _id: req.body.company
-                    }, req.body, {
-                        manager: newEmployee._id
-                    }, (err, company) => {
+                    },{
+                        $set: {
+                            manager: newEmployee._id
+                        }
+                    }, {useFindAndModify: false}, (err, company) => {
+                        console.log(err);
                         if (err) return res.status(500).json({
-                            msg: "Server Error :)",
+                            msg: "Server Error :1)",
                             err: err.msg
                         });
                         // res.json(company);
@@ -146,7 +149,7 @@ router.put('/', (req, res) => {
 
                     newFactory.save((err, factor) => {
                         if (err) return res.status(500).json({
-                            msg: "Server Error :)",
+                            msg: "Server Error :2)",
                             err: err.message
                         });
                         // res.json(product)
@@ -154,7 +157,7 @@ router.put('/', (req, res) => {
 
                     newEmployee.save((err, employee) => {
                         if (err) return res.status(500).json({
-                            msg: "Server Error :)",
+                            msg: "Server Error :3)",
                             err: err.message
                         });
                         res.json(employee)

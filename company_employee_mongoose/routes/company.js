@@ -12,7 +12,7 @@ const factor = require('../models/factor');
 router.get('/companyPages', function (req, res) {
     company.find({}, (err, companies) => {
         if (err) return res.status(500).json({
-            msg: "Server Error :)",
+            msg: "Server Error :22)",
             err: err.msg
         });
         // res.json(companies);
@@ -37,10 +37,14 @@ router.get('/all', (req, res) => {
 });
 // todo -------------------------------------- all company and admins
 router.get('/companies_and_admin', (req, res) => {
-    company.find({}, {__v: 0}).populate('manager', {first_name: 1, _id: 0}).exec((err, product) => {
-        if (err) return res.status(500).json({msg: "Server Error :)", err: err.message});
+    employee.find({}, (err, employee) => {
+        if (err) return res.status(500).json({msg: "Server Error :-)", err: err.message});
 
-        res.json(product)
+        company.find({}, {__v: 0}).populate('manager').exec((err, product) => {
+            if (err) return res.status(500).json({msg: "Server Error :=)", err: err.message});
+            
+            res.json(product)
+        })
     })
 })
 
