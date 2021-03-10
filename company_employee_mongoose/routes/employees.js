@@ -7,7 +7,7 @@ const factor = require('../models/factor');
 
 
 
-router.get('/employeePages', function (req, res) {
+router.get('/employeePages:id', function (req, res) {
     employee.find({}, (err, companies) => {
         if (err) return res.status(500).json({
             msg: "Server Error :)",
@@ -49,7 +49,22 @@ Company.find({}, (err, company) => {
 })
 
 });
+router.get('/allEmployee:id', (req, res) => {
+    Company.find({}, (err, company) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        employee.find({company: req.params.id}).populate("company", { name: 1}).exec( (err, employee) => {
+            if (err) return res.status(500).json({
+                msg: "Server Error :)",
+                err: err.msg
+            });
+            res.json(employee);
+        })
+    })
 
+    });
 
 router.get('/:id', (req, res) => {
     let arr = req.params.id.split('-');

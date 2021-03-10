@@ -9,19 +9,31 @@ const factor = require('../models/factor');
 // });
 
 
-router.get('/companyPages', function (req, res) {
+router.get('/', function (req, res) {
     company.find({}, (err, companies) => {
         if (err) return res.status(500).json({
             msg: "Server Error :22)",
             err: err.msg
         });
         // res.json(companies);
-        res.render('companiesInfo', {
+        res.render('companies', {
             companies
         });
     });
 })
+router.get('/employeesPage:id', function (req, res) {
+    employee.find({company: req.params.id}, (err, employees) => {
 
+        if (err) return res.status(500).json({
+            msg: "Server Error :22)",
+            err: err.msg
+        });
+        // res.json(companies);
+        res.render('companiesInfo', {
+            employees
+        });
+    });
+})
 
 
 // ? -------------------------------------- < ready company > ---------------------
@@ -42,7 +54,7 @@ router.get('/companies_and_admin', (req, res) => {
 
         company.find({}, {__v: 0}).populate('manager').exec((err, product) => {
             if (err) return res.status(500).json({msg: "Server Error :=)", err: err.message});
-            
+
             res.json(product)
         })
     })
@@ -84,6 +96,36 @@ router.get('/recently:id', (req, res) => {
         res.json(companies);
     });
 });
+
+
+router.get('/filter:id', (req, res) => {
+    let arr = req.params.id.split('--');
+
+
+    console.log(arr);
+
+
+    company.find({
+        $and: [{
+            "date_registered": {
+                $lt: `${arr[0]}`
+            }
+        }, {
+            "date_registered": {
+                $gt: `${ arr[1]}`
+            }
+        }]
+    }, (err, companies) => {
+        if (err) return res.status(500).json({
+            msg: "Server Error :)",
+            err: err.msg
+        });
+        res.json(companies);
+    })
+
+});
+
+
 // todo -------------------------------- < / find last years for req.params.id >
 router.get('/:id', (req, res) => {
 
@@ -102,8 +144,6 @@ router.get('/:id', (req, res) => {
     })
 
 });
-
-
 
 // ? -------------------------------------- < create company > ---------------------
 router.put('/', (req, res) => {

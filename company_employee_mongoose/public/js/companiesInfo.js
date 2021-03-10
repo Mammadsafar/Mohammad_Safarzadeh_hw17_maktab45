@@ -1,12 +1,17 @@
 $(document).ready(function () {
 
-    let companies = [];
+    let employee = [];
+
+    let url = window.location.href.split('employeesPage');
+
+    console.log(url);
 
     $.ajax({
         type: "GET",
-        url: "/company/all",
+        url: `/employee/allEmployee${url[1]}`,
         success: function (res) {
-            companies = res;
+            console.log(res);
+            employee = res;
             createTable(res)
         }
     });
@@ -17,13 +22,12 @@ $(document).ready(function () {
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name </th>
-                <th>ID Register</th>
-                <th>City </th>
-                <th>Province</th>
-                <th>Date Registered </th>
-                <th>Phone Number</th>
-                <th>Actions</th>
+                <th>First Name </th>
+                <th>Last Name</th>
+                <th>National Number </th>
+                <th>Gender</th>
+                <th>Manager</th>
+                <th>Birthday</th>
             </tr>
         </thead>
         <tbody id="table_body">
@@ -38,12 +42,12 @@ $(document).ready(function () {
 
                 <tr>
                 <td>${i+1}</td>
-                <td>${arr[i].name}</td>
-                <td>${arr[i].id_register}</td>
-                <td>${arr[i].city}</td>
-                <td>${arr[i].province}</td>
-                <td>${arr[i].date_registered}</td>
-                <td>${arr[i].phone_number}</td>
+                <td>${arr[i].first_name}</td>
+                <td>${arr[i].last_name}</td>
+                <td>${arr[i].national_number}</td>
+                <td>${arr[i].gender}</td>
+                <td>${arr[i].manager}</td>
+                <td>${arr[i].birthday}</td>
                 <td>
                     <button type="button" id="edit" class="btn btn-primary" data-toggle="modal"
                     data-target="#exampleModal" name="${arr[i]._id}">View and Edit</button>
@@ -58,7 +62,6 @@ $(document).ready(function () {
 
     }
 
-
     function clearBody() {
 
         $("#table").html("")
@@ -68,47 +71,51 @@ $(document).ready(function () {
 
         $("#myModal_company").html("")
         console.log(id);
-        for (const key in companies) {
-            if (companies[key]._id === `${id}`) {
-                console.log(companies[key]);
+        for (const key in employee) {
+            if (employee[key]._id === `${id}`) {
+                console.log(employee[key]);
                 let company =
                     `
                 <div class="column" id="main">
-                        <form>
                             <div class="form-group">
                             <label for="exampleInputName">ID :</label>
                             <input type="name" class="form-control" id="exampleInputName"
-                            placeholder="${companies[key]._id}" readOnly>
+                            placeholder="${employee[key]._id}" readOnly>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputName">name :</label>
-                                <input type="name" class="form-control" id="input_name"
-                                    value="${companies[key].name}">
+                                <label for="exampleInputName">First Name :</label>
+                                <input type="name" class="form-control" id="first_name"
+                                    value="${employee[key].first_name}">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputName">id_register :</label>
-                                <input type="name" class="form-control" id="input_id_register"
-                                    value="${companies[key].id_register}">
+                                <label for="exampleInputName">Last Name :</label>
+                                <input type="name" class="form-control" id="last_name"
+                                    value="${employee[key].last_name}">
                             </div>
                             <div class="form-group">
-                            <label for="exampleInputName">city :</label>
-                            <input type="name" class="form-control" id="input_city"
-                                value="${companies[key].city}">
+                            <label for="exampleInputName">National Number :</label>
+                            <input type="name" class="form-control" id="national_number"
+                                value="${employee[key].national_number}">
                             </div>
                             <div class="form-group">
-                            <label for="exampleInputName">province :</label>
-                            <input type="name" class="form-control" id="input_province"
-                                value="${companies[key].province}">
+                            <label for="exampleInputName">Gender :</label>
+                            <input type="name" class="form-control" id="gender"
+                                value="${employee[key].gender}">
                             </div>
 
                             <div class="form-group">
-                            <label for="exampleInputName">phone_number :</label>
+                            <label for="exampleInputName">Manager :</label>
                             <input type="name" class="form-control" id="input_phone_number"
-                                value="${companies[key].phone_number}">
+                                value="${employee[key].manager}" readonly>
                             </div>
-                            <button id="update_btn" type="submit" class="btn btn-primary" name="${companies[key]._id}">Update</button>
-                            <button id="delete_btn" type="submit" class="btn btn-primary" name="${companies[key]._id}">Delete</button>
-                        </form>
+
+                            <div class="form-group">
+                            <label for="exampleInputName">Birthday :</label>
+                            <input type="name" class="form-control" id="birthday"
+                                value="${employee[key].birthday}">
+                            </div>
+                            <button id="update_btn" type="submit" class="btn btn-primary" name="${employee[key]._id}">Update</button>
+                            <button id="delete_btn" type="submit" class="btn btn-primary" name="${employee[key]._id}">Delete</button>
                     </div>
                     <div>
                         <?xml version="1.0" encoding="UTF-8"?>
@@ -126,12 +133,13 @@ $(document).ready(function () {
                     </div>
                     <div class="column" id="secondary">
                         <div class="sec-content">
-                            <h1>${companies[key].name}</h1>
-                            <h1>${companies[key].id_register}</h1>
-                            <h1>${companies[key].city}</h1>
-                            <h1>${companies[key].province}</h1>
-                            <h1>${companies[key].date_registered}</h1>
-                            <h1>${companies[key].phone_number}</h1>
+                            <h1>${employee[key].first_name}</h1>
+                            <h1>${employee[key].last_name}</h1>
+                            <h1>${employee[key].national_number}</h1>
+                            <h1>${employee[key].gender}</h1>
+                            <h1>${employee[key].manager}</h1>
+                            <h1>${employee[key].birthday}</h1>
+
                         </div>
                     </div>
 
@@ -140,24 +148,21 @@ $(document).ready(function () {
             }
         }
     }
-
     $("body").on('click', '#edit', function () {
         show_company(this.name)
     })
-
-
     $("body").on('click', '#update_btn', function () {
 
         let user = {
-            name: $(input_name).val(),
-            id_register: $(input_id_register).val(),
-            city: $(input_city).val(),
-            province: $(input_province).val(),
-            phone_number: $(input_phone_number).val()
+            first_name: $(first_name).val(),
+            last_name: $(last_name).val(),
+            national_number: $(national_number).val(),
+            gender: $(gender).val(),
+            birthday: $(birthday).val()
         }
         $.ajax({
             type: "POST",
-            url: `/company/${this.name}`,
+            url: `/employee/${this.name}`,
             data: user,
             // dataType: "dataType",
             success: function (response) {
@@ -177,18 +182,10 @@ $(document).ready(function () {
 
     })
     $("body").on('click', '#delete_btn', function () {
-        let user = {
-            name: $("#input_name").val(),
-            id_register: $("#input_id_register").val(),
-            city: $("#input_city").val(),
-            province: $("#input_province").val(),
-            date_registered: $("#input_date_registered").val(),
-            phone_number: $("#input_phone_number").val()
-        }
+
         $.ajax({
             type: "DELETE",
-            url: `/company/${this.name}`,
-            data: user,
+            url: `/employee/${this.name}`,
             success: function (response) {
 
                 Swal.fire({
@@ -213,38 +210,30 @@ $(document).ready(function () {
 
     })
 
-    $("body").on('click', '#create', function () {
+ 
 
+    $("body").on('click', '#create_employee', function () {
 
+        
         $("#myModal_company").html("")
-        let company =
+        let employee =
             `
         <div class="column" id="main">
                     <div class="form-group">
-                        <label for="exampleInputName">name :</label>
-                        <input type="name" class="form-control" id="input_name"
-                            placeholder="name">
+                        <label for="exampleInputName">First Name :</label>
+                        <input type="name" class="form-control" id="input_first_name"
+                            placeholder="First Name">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputName">id_register :</label>
-                        <input type="name" class="form-control" id="input_id_register"
-                            placeholder="id_register">
-                    </div>
-                    <div class="form-group">
-                    <label for="exampleInputName">city :</label>
-                    <input type="name" class="form-control" id="input_city"
-                        placeholder="city">
-                    </div>
-                    <div class="form-group">
-                    <label for="exampleInputName">province :</label>
-                    <input type="name" class="form-control" id="input_province"
-                        placeholder="province">
-                    </div>
+                    <label for="exampleInputName">Last Name :</label>
+                    <input type="name" class="form-control" id="input_last_name"
+                        placeholder="Last Name">
+                </div>
 
                     <div class="form-group">
-                    <label for="exampleInputName">date_registered :</label>
-                    <input type="name" class="form-control" id="input_date_registered"
-                        placeholder="date_registered">
+                    <label for="exampleInputName">National Number :</label>
+                    <input type="name" class="form-control" id="input_national_number"
+                        placeholder="National Number">
                     </div>
 
                     <div class="form-group">
@@ -252,7 +241,30 @@ $(document).ready(function () {
                     <input type="name" class="form-control" id="input_phone_number"
                         placeholder="phone_number">
                     </div>
-                    <button id="create_btn" type="submit" class="btn btn-primary">Create</button>
+
+                    <div class="form-group">
+                    <label for="exampleInputName">Gender :</label>
+                        <select name="gender" id="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                    <label for="exampleInputName">Manager :</label>
+                        <select name="manager" id="manager">
+                            <option value="true">true</option>
+                            <option value="false">false</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                    <label for="exampleInputName">Birthday :</label>
+                    <input type="name" class="form-control" id="input_birthday"
+                        placeholder="dd-mm-yyyy">
+                    </div>
+
+
+                    <button id="create_employee_btn" type="submit" class="btn btn-primary">Create</button>
             </div>
             <div>
                 <?xml version="1.0" encoding="UTF-8"?>
@@ -270,43 +282,49 @@ $(document).ready(function () {
             </div>
             <div class="column" id="secondary">
                 <div class="sec-content">
-                    <h1>Create New Company</h1>
+                    <h1>Create New employee</h1>
 
                 </div>
             </div>
 
         `
-        $("#myModal_company").append(company);
+        $("#myModal_company").append(employee);
 
     })
-    $("body").on('click', '#create_btn', function () {
+    $("body").on('click', '#create_employee_btn', function () {
 
-        let name = $("#input_name");
-        let id_register = $("#input_id_register");
-        let city = $("#input_city");
-        let province = $("#input_province");
-        let date_registered = $("#input_date_registered");
+        let url = window.location.href.split('employeesPage');
+
+        let first_name = $("#input_first_name");
+        let last_name = $("#input_last_name");
+        let national_number = $("#input_national_number");
         let phone_number = $("#input_phone_number");
+        let gender = $("#gender");
+        let company_selector = $("#company_selector");
+        let birthday = $("#input_birthday");
+        let manager = $("#manager");
         // let user={};
-        let array = [name, id_register, city, province, date_registered, phone_number]
+        let array = [first_name, last_name, national_number, phone_number, gender, company_selector, birthday,manager]
         if (check_input(array) === true) {
             let user = {
-                name: $(name).val(),
-                id_register: $(id_register).val(),
-                city: $(city).val(),
-                province: $(province).val(),
-                date_registered: $(date_registered).val(),
-                phone_number: $(phone_number).val()
+                first_name: $(first_name).val(),
+                last_name: $(last_name).val(),
+                national_number: $(national_number).val(),
+                phone_number: $(phone_number).val(),
+                gender: $(gender).val(),
+                manager: $(manager).val(),
+                company: url[1],
+                birthday: $(birthday).val()
             }
             $.ajax({
                 type: "PUT",
-                url: "/company",
+                url: "/employee",
                 data: user,
                 // dataType: "application/json",
                 success: function (response) {
                     Swal.fire({
                         icon: 'success',
-                        title: `${$(signUp_name).val()}`,
+                        title: `${$(first_name).val() }  ${ $(last_name).val()}`,
                         text: 'Your Account was successfully signed in',
                     })
                     window.location.reload();
@@ -324,7 +342,6 @@ $(document).ready(function () {
 
 
     })
-
 
     function check_input(array) {
 
@@ -348,9 +365,13 @@ $(document).ready(function () {
 
     $('.input-daterange').datepicker({
         format: 'dd-mm-yyyy',
-        autoclose: true,
-        calendarWeeks : true,
-        clearBtn: true,
-        disableTouchKeyboard: true
-        });
+        todayHighlight: true,
+        startDate: '-70y'
+    });
+
+
+
+
+
+
 })

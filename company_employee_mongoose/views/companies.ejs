@@ -13,9 +13,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     <%- include('./partials/head_link')-%>
-    <link rel="stylesheet" href="/css/companiesInfo.css">
+    <link rel="stylesheet" href="/css/companies.css">
 
-    <title>Company Information</title>
+    <title>Companies Information</title>
 </head>
 
 <body>
@@ -32,9 +32,16 @@
                         <form autocomplete="off">
                             <div class="flex-sm-row flex-column d-flex">
                                 <div class="col-sm-9 col-12 px-0 mb-2">
-                                    
+                                    <div class="input-group input-daterange"> <input type="text" class="form-control" id="start_date"
+                                            placeholder="Arriving Date" readonly> <input type="text"
+                                            class="form-control"  id="end_date" placeholder="Leaving Date" readonly> </div>
+                                </div>
+                                <div class="col-sm-3 col-12 px-0"> <button type="button"
+                                        class="btn btn-black" id="filter_date">Search</button> </div>
+                                <button type="button" id="create_company" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModal">CREATE Company</button>
                                 <button type="button" id="create_employee" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#exampleModal">CTEATE Employee</button>
+                                    data-target="#exampleModal">CREATE Employee</button>
                             </div>
                         </form>
                     </div>
@@ -68,7 +75,7 @@
 
 
 
-    <script src="/js/companiesInfo.js"></script>
+    <script src="/js/companies.js"></script>
 </body>
 
 </html>
