@@ -99,20 +99,23 @@ router.get('/recently:id', (req, res) => {
 
 
 router.get('/filter:id', (req, res) => {
-    let arr = req.params.id.split('--');
+    let arr = req.params.id.split('-');
 
+    let recentlyYear =  arr[2];
+    let oldYear =  arr[6];
 
     console.log(arr);
+    console.log(recentlyYear, oldYear);
 
 
     company.find({
         $and: [{
             "date_registered": {
-                $lt: `${arr[0]}`
+                $gt: `${recentlyYear}`
             }
         }, {
             "date_registered": {
-                $gt: `${ arr[1]}`
+                $lt: `${ oldYear}`
             }
         }]
     }, (err, companies) => {
@@ -120,6 +123,7 @@ router.get('/filter:id', (req, res) => {
             msg: "Server Error :)",
             err: err.msg
         });
+        console.log(companies);
         res.json(companies);
     })
 

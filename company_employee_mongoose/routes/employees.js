@@ -72,7 +72,8 @@ router.get('/:id', (req, res) => {
     let recentlyYear = new Date().getFullYear() - arr[0];
     let oldYear = new Date().getFullYear() - arr[1];
 
-
+    console.log(arr);
+    console.log(recentlyYear, oldYear);
     employee.find({
         $and: [{
             "birthday": {
