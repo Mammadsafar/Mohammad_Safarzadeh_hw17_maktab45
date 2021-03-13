@@ -57,10 +57,7 @@ $(document).ready(function () {
 
 
     }
-    function clearBody() {
 
-        $("#table").html("")
-    }
     function show_company(id) {
 
         $("#myModal_company").html("")
@@ -71,7 +68,7 @@ $(document).ready(function () {
                 let company =
                     `
                 <div class="column" id="main">
-                   
+
                             <div class="form-group">
                             <label for="exampleInputName">ID :</label>
                             <input type="name" class="form-control" id="exampleInputName"
@@ -80,12 +77,12 @@ $(document).ready(function () {
                             <div class="form-group">
                                 <label for="exampleInputName">name :</label>
                                 <input type="name" class="form-control" id="input_name"
-                                    value="${companies[key].name}">
+                                    value="${companies[key].name}" readOnly>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputName">id_register :</label>
                                 <input type="name" class="form-control" id="input_id_register"
-                                    value="${companies[key].id_register}">
+                                    value="${companies[key].id_register}" readOnly>
                             </div>
                             <div class="form-group">
                             <label for="exampleInputName">city :</label>
@@ -151,7 +148,7 @@ $(document).ready(function () {
             phone_number: $(input_phone_number).val()
         }
         $.ajax({
-            type: "POST",
+            type: "PUT",
             url: `/company/${this.name}`,
             data: user,
             // dataType: "dataType",
@@ -293,14 +290,14 @@ $(document).ready(function () {
                 phone_number: $(phone_number).val()
             }
             $.ajax({
-                type: "PUT",
+                type: "POST",
                 url: "/company",
                 data: user,
                 // dataType: "application/json",
                 success: function (response) {
                     Swal.fire({
                         icon: 'success',
-                        title: `${$(signUp_name).val()}`,
+                        title: `${$(name).val()}`,
                         text: 'Your Account was successfully signed in',
                     })
                     window.location.reload();
@@ -310,7 +307,7 @@ $(document).ready(function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'UserName or Password is incorrect!',
+                        text:  'Your name or id not valid',
                     })
                 },
             });

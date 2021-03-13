@@ -4,7 +4,6 @@ $(document).ready(function () {
 
     let url = window.location.href.split('employeesPage');
 
-    console.log(url);
 
     $.ajax({
         type: "GET",
@@ -62,12 +61,7 @@ $(document).ready(function () {
 
     }
 
-    function clearBody() {
-
-        $("#table").html("")
-    }
-
-    function show_company(id) {
+    function show_employee(id) {
 
         $("#myModal_company").html("")
         console.log(id);
@@ -95,17 +89,19 @@ $(document).ready(function () {
                             <div class="form-group">
                             <label for="exampleInputName">National Number :</label>
                             <input type="name" class="form-control" id="national_number"
-                                value="${employee[key].national_number}">
+                                value="${employee[key].national_number}" readOnly>
                             </div>
+
                             <div class="form-group">
                             <label for="exampleInputName">Gender :</label>
-                            <input type="name" class="form-control" id="gender"
+                            <label for="exampleInputName">National Number :</label>
+                            <input type="name" class="form-control" id="input_gender"
                                 value="${employee[key].gender}">
                             </div>
 
                             <div class="form-group">
                             <label for="exampleInputName">Manager :</label>
-                            <input type="name" class="form-control" id="input_phone_number"
+                            <input type="name" class="form-control" id="manager"
                                 value="${employee[key].manager}" readonly>
                             </div>
 
@@ -149,19 +145,25 @@ $(document).ready(function () {
         }
     }
     $("body").on('click', '#edit', function () {
-        show_company(this.name)
+        show_employee(this.name)
     })
     $("body").on('click', '#update_btn', function () {
+
+        let first_name = $("#first_name");
+        let last_name = $("#last_name");
+        let national_number = $("#national_number");
+        let input_gender = $("#input_gender");
+        let birthday = $("#birthday");
 
         let user = {
             first_name: $(first_name).val(),
             last_name: $(last_name).val(),
             national_number: $(national_number).val(),
-            gender: $(gender).val(),
+            gender: $(input_gender).val(),
             birthday: $(birthday).val()
         }
         $.ajax({
-            type: "POST",
+            type: "PUT",
             url: `/employee/${this.name}`,
             data: user,
             // dataType: "dataType",
@@ -209,8 +211,6 @@ $(document).ready(function () {
         });
 
     })
-
- 
 
     $("body").on('click', '#create_employee', function () {
 
@@ -303,7 +303,10 @@ $(document).ready(function () {
         let company_selector = $("#company_selector");
         let birthday = $("#input_birthday");
         let manager = $("#manager");
+        let bool= Boolean;
+        bool=$(manager).val();
         // let user={};
+
         let array = [first_name, last_name, national_number, phone_number, gender, company_selector, birthday,manager]
         if (check_input(array) === true) {
             let user = {
@@ -312,12 +315,12 @@ $(document).ready(function () {
                 national_number: $(national_number).val(),
                 phone_number: $(phone_number).val(),
                 gender: $(gender).val(),
-                manager: $(manager).val(),
+                manager: bool,
                 company: url[1],
                 birthday: $(birthday).val()
             }
             $.ajax({
-                type: "PUT",
+                type: "POST",
                 url: "/employee",
                 data: user,
                 // dataType: "application/json",
@@ -334,7 +337,7 @@ $(document).ready(function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'UserName or Password is incorrect!',
+                        text: 'can not create employee!',
                     })
                 },
             });
@@ -360,7 +363,6 @@ $(document).ready(function () {
         }
 
     }
-
 
 
     $('.input-daterange').datepicker({

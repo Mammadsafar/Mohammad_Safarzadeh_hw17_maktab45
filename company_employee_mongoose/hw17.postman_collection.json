@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "5ee4ab1b-f2e5-4c5e-a5c0-79c338246fdf",
-		"name": "hw16",
+		"_postman_id": "b166085c-214c-4131-8f51-9b69c9be5ee8",
+		"name": "hw17",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,11 +11,11 @@
 				{
 					"name": "create company",
 					"request": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"name\" : \"meido\",\r\n        \"id_register\" : \"10026\",\r\n        \"city\" : \"tabas\",\r\n        \"province\" : \"tabas\",\r\n        \"date_registered\" : \"1394.11.09\",\r\n        \"phone_number\" : \"09902531111\"\r\n}",
+							"raw": "{\r\n        \"name\" : \"qiftollyq\",\r\n        \"id_register\" : \"100221\",\r\n        \"city\" : \"tabas\",\r\n        \"province\" : \"tabas\",\r\n        \"date_registered\" : \"2020.11.09\",\r\n        \"phone_number\" : \"09902531714\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -58,7 +58,7 @@
 				{
 					"name": "update company",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -105,7 +105,7 @@
 				{
 					"name": "change city",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -129,6 +129,82 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "find company and employees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/company/company6046155f20a3061e1026ae50",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"company",
+								"company6046155f20a3061e1026ae50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delet company",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/company/6046155f20a3061e1026ae50",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"company",
+								"6046155f20a3061e1026ae50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find company admin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/company/company_admin604615a420a3061e1026ae51",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"company",
+								"company_admin604615a420a3061e1026ae51"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find company and admins",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/company/companies_and_admin",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"company",
+								"companies_and_admin"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -138,11 +214,11 @@
 				{
 					"name": "create employee",
 					"request": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n        \"first_name\" : \"zahra\",\r\n        \"last_name\" : \"bahari\",\r\n        \"national_number\" : \"858585\",\r\n        \"gender\" : \"femail\",\r\n        \"manager\" : false,\r\n        \"birthday\" : \"2001-01-05\"\r\n}",
+							"raw": "{\r\n        \"first_name\" : \"mohammad\",\r\n        \"last_name\" : \"safar\",\r\n        \"national_number\" : \"123456\",\r\n        \"gender\" : \"mail\",\r\n        \"manager\" : true,\r\n        \"birthday\" : \"2000-01-05\",\r\n        \"company\" : \"604656ca7b26065f08531c11\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,7 +242,7 @@
 				{
 					"name": "update employee",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",

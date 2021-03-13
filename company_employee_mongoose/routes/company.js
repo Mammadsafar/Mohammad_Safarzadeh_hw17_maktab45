@@ -150,7 +150,7 @@ router.get('/:id', (req, res) => {
 });
 
 // ? -------------------------------------- < create company > ---------------------
-router.put('/', (req, res) => {
+router.post('/', (req, res) => {
 
     company.find({
         $or: [
@@ -162,9 +162,8 @@ router.put('/', (req, res) => {
             msg: "Server Error :=)",
             err: err.msg
         });
-        // res.json(companies);
 
-        if (!company_find) return res.status(404).json({msg: "Not Found :)", err: err.message});
+        if (company_find.length>0) return res.status(400).json({msg: "Bad Request :=)"});
 
         const newCompany = new company({
 
@@ -174,9 +173,9 @@ router.put('/', (req, res) => {
             province: req.body.province,
             date_registered: req.body.date_registered,
             phone_number: req.body.phone_number
-    
+
         });
-    
+
         newCompany.save((err, company) => {
             console.log(err);
             if (err) return res.status(500).json({
@@ -195,7 +194,7 @@ router.put('/', (req, res) => {
 });
 // ? -------------------------------------- < update company > ---------------------
 
-router.post('/changeCity', (req, res) => {
+router.put('/changeCity', (req, res) => {
 
 
         company.updateMany({"__v" : 0},
@@ -214,7 +213,7 @@ router.post('/changeCity', (req, res) => {
 });
 
 
-router.post('/:id', (req, res) => {
+router.put('/:id', (req, res) => {
 
 
     company.findOneAndUpdate({
